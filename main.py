@@ -1,33 +1,113 @@
+import os
+import sys
+import subprocess
 
-import os, sys, subprocess
 
 MODULOS = {
-    "1": ("Módulo 2 - Motor de Inferencia", "MODULO_2_MOTOR_INFERENCIA/sesion2_motor_inferencia/sesion2_motor_inferencia/main.py"),
-    "2": ("Módulo 3 - Lógica Difusa", "MODULO_3_LOGICA_DIFUSA/sesion3_logica_difusa/sesion3_logica_difusa/main.py"),
-    "3": ("Módulo 5 - Defuzzificación", "MODULO_5_DEFUZZIFICACION/sesion5_defuzzificacion/sesion5_defuzzificacion/main.py"),
-    "4": ("Módulo 6 - Árbol de Decisión", "MODULO_6_ARBOL_DECISION/sesion6_arbol_decision/main.py"),
-    "5": ("Sistema Experto IT", "MODULO_SISTEMA_EXPERTO_IT/sistema_experto_it/sistema_experto_it/main.py"),
-    "6": ("Módulo 9 - KNN", "MODULO_9_KNN/sesion9_knn/main.py"),
-    "7": ("Módulo 10 - SVM", "MODULO_10_SVM/sesion10_svm/main.py"),
-    "8": ("Módulo 11 - Perceptrón", "MODULO_11_PERCEPTRON/sesion11_perceptron/main.py"),
-    "9": ("Módulo 12 - Redes MLP", "MODULO_12_REDES_MLP/sesion12_redes_mlp/main.py"),
+    "1": "Módulo 2 - Motor de Inferencia",
+    "2": "Módulo 3 - Lógica Difusa",
+    "3": "Módulo 5 - Defuzzificación",
+    "4": "Módulo 6 - Árbol de Decisión",
+    "5": "Sistema Experto IT",
+    "6": "Módulo 9 - KNN",
+    "7": "Módulo 10 - SVM",
+    "8": "Módulo 11 - Perceptrón",
+    "9": "Módulo 12 - Redes MLP",
 }
 
-def menu():
-    while True:
-        print("\n" + "="*72)
-        print("TRABAJO INTEGRADO - MÓDULOS CASE")
-        print("="*72)
-        for k,(nombre,_) in MODULOS.items(): print(f"{k}. {nombre}")
-        print("0. Salir")
-        op=input("Seleccione un módulo: ").strip()
-        match op:
-            case "0":
-                print("Trabajo finalizado."); break
-            case _ if op in MODULOS:
-                ruta=MODULOS[op][1]
-                subprocess.run([sys.executable, ruta], cwd=os.path.dirname(os.path.abspath(__file__)))
-            case _:
-                print("Opción no válida.")
 
-if __name__=="__main__": menu()
+def limpiar():
+    os.system("cls" if os.name == "nt" else "clear")
+
+
+def mostrar_menu():
+    limpiar()
+
+    print("=" * 60)
+    print("          TRABAJO INTEGRADO - MÓDULOS CASE")
+    print("=" * 60)
+    print()
+
+    for k, nombre in MODULOS.items():
+        print(f"{k}. {nombre}")
+
+    print("0. Salir")
+    print()
+
+
+def ejecutar_modulo(opcion):
+    """
+    Ejecuta el main.py correspondiente al módulo seleccionado.
+    """
+
+    rutas = {
+        "1": "modulo_2",
+        "2": "modulo_3",
+        "3": "modulo_5",
+        "4": "modulo_6",
+        "5": "modulo_sistema_experto",
+        "6": "modulo_9",
+        "7": "modulo_7",
+        "8": "modulo_11",
+        "9": "modulo_12",
+    }
+
+    carpeta = rutas.get(opcion)
+
+    if carpeta is None:
+        print("Opción no válida.")
+        return
+
+    archivo = os.path.join(carpeta, "main.py")
+
+    if not os.path.exists(archivo):
+        print()
+        print("ERROR:")
+        print(f"No se encontró el archivo:")
+        print(archivo)
+        print()
+        input("Presiona ENTER para continuar...")
+        return
+
+    try:
+        subprocess.run([sys.executable, archivo], check=True)
+
+    except subprocess.CalledProcessError as e:
+        print()
+        print("=" * 60)
+        print("EL MÓDULO TERMINÓ CON UN ERROR")
+        print("=" * 60)
+        print(f"Código de error: {e.returncode}")
+        print()
+        input("Presiona ENTER para volver al menú...")
+
+
+def menu():
+
+    while True:
+
+        mostrar_menu()
+
+        opcion = input("Seleccione un módulo: ").strip()
+
+        if opcion == "0":
+            limpiar()
+            print("=" * 60)
+            print("Sistema finalizado.")
+            print("=" * 60)
+            break
+
+        if opcion not in MODULOS:
+            print()
+            print("Opción inválida.")
+            input("Presiona ENTER para continuar...")
+            continue
+
+        ejecutar_modulo(opcion)
+
+        print()
+        input("Presiona ENTER para volver al menú...")
+
+
+if __name__ == "__main__":
+    menu()
