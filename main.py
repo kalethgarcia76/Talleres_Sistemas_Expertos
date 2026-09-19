@@ -46,8 +46,8 @@ def ejecutar_modulo(opcion):
         "3": "modulo_5",
         "4": "modulo_6",
         "5": "modulo_sistema_experto",
-        "6": "modulo_9",
-        "7": "modulo_7",
+        "6": "modulo_9_KNN",
+        "7": "modulo_10_svm",
         "8": "modulo_11",
         "9": "modulo_12",
     }
